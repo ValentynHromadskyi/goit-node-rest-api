@@ -1,11 +1,52 @@
-import contactsService from "../services/contactsServices.js";
+import HttpError from "../helpers/HttpError.js";
+import { catchAsync } from "../services/catchAsync.js";
+import * as contactsService from "../services/contactsServices.js";
 
-export const getAllContacts = (req, res) => {};
+export const getAllContacts = catchAsync(async (req, res) => {
+  const result = await contactsService.listContacts();
+  res.status(200).json({
+    result,
+  });
+});
 
-export const getOneContact = (req, res) => {};
+export const getOneContact = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await contactsService.getContactById(id);
+  if (!result) {
+    throw HttpError(404);
+  }
+  res.status(200).json({
+    result,
+  });
+});
 
-export const deleteContact = (req, res) => {};
+export const deleteContact = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await contactsService.removeContact(id);
+  if (!result) {
+    throw HttpError(404);
+  }
+  res.status(200).json({
+    result,
+  });
+});
 
-export const createContact = (req, res) => {};
+export const createContact = catchAsync(async (req, res) => {
+  console.log(req);
+  const result = await contactsService.addContact(req.body);
 
-export const updateContact = (req, res) => {};
+  res.status(201).json({
+    result,
+  });
+});
+
+export const updateContact = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await contactsService.updateContact(id, req.body);
+  if (!result) {
+    throw HttpError(404);
+  }
+  res.status(200).json({
+    result,
+  });
+});
