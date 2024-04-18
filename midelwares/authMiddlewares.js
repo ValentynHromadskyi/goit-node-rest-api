@@ -16,6 +16,10 @@ export const protect = async (req, res, next) => {
 
     const currentUser = await findUserById(id);
 
+    if (currentUser.token !== token) {
+      console.log("Not authorized");
+      return next(HttpError(401, "Not authorized"));
+    }
     if (!currentUser) {
       return next(HttpError(401, "Not authorized"));
     }
