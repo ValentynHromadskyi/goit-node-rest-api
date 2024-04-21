@@ -13,9 +13,11 @@ import {
   updateContactSchema,
   updateStstusContactSchema,
 } from "../schemas/contactsSchemas.js";
-import isValidId from "../midelwares/isValidId.js";
+import { isValidId } from "../midelwares/isValidId.js";
+import { protect } from "../midelwares/authMiddlewares.js";
 
 const contactsRouter = express.Router();
+contactsRouter.use(protect);
 
 contactsRouter.get("/", getAllContacts);
 
