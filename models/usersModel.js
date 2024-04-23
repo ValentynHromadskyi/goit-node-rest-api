@@ -21,6 +21,7 @@ const usersSchema = new Schema(
       type: String,
       default: null,
     },
+    avatarURL: String,
   },
   { versionKey: false }
 );

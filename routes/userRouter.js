@@ -6,8 +6,10 @@ import {
   currentUser,
   login,
   logout,
+  updateAvatar,
 } from "../controllers/usersControllers.js";
 import { protect } from "../midelwares/authMiddlewares.js";
+import { uploadAvatar } from "../midelwares/upload.js";
 
 const usersRouter = express.Router();
 
@@ -18,5 +20,14 @@ usersRouter.post("/login", validateBody(createUserSchema), login);
 usersRouter.post("/logout", protect, logout);
 
 usersRouter.get("/current", protect, currentUser);
+
+usersRouter.patch(
+  "/avatars",
+  protect,
+  // imageProcessing,
+  // checkOldAvatar,
+  uploadAvatar,
+  updateAvatar
+);
 
 export default usersRouter;
