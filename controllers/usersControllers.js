@@ -88,6 +88,11 @@ export const currentUser = async (req, res, next) => {
 };
 
 export const updateAvatar = async (req, res) => {
+  if (!req.file) {
+    return res
+      .status(400)
+      .json({ error: "The 'avatar' field with an image is required" });
+  }
   const { _id } = req.user;
 
   const { path: tempUpload, originalname } = req.file;

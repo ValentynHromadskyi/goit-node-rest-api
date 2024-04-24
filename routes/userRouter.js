@@ -21,13 +21,6 @@ usersRouter.post("/logout", protect, logout);
 
 usersRouter.get("/current", protect, currentUser);
 
-usersRouter.patch(
-  "/avatars",
-  protect,
-  // imageProcessing,
-  // checkOldAvatar,
-  uploadAvatar,
-  updateAvatar
-);
+usersRouter.patch("/avatars", protect, uploadAvatar, updateAvatar);
 
 export default usersRouter;
