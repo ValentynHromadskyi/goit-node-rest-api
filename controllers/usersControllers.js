@@ -1,5 +1,8 @@
 import jwt from "jsonwebtoken";
 import HttpError from "../helpers/HttpError.js";
+import path from "path";
+import fs from "fs/promises";
+import Jimp from "jimp";
 import {
   comparePasswords,
   createUser,
@@ -82,4 +85,34 @@ export const currentUser = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+export const updateAvatar = async (req, res) => {
+  if (!req.file) {
+    return res
+      .status(400)
+      .json({ error: "The 'avatar' field with an image is required" });
+  }
+  const { _id } = req.user;
+
+  const { path: tempUpload, originalname } = req.file;
+  const extension = req.file.originalname.split(".").pop().toLowerCase();
+  const avatarName = `${_id}.${extension}`;
+  const avatarsDir = path.join("public", "avatars");
+  const resultUpload = path.join(avatarsDir, avatarName);
+
+  await fs.rename(tempUpload, resultUpload);
+  const avatarURL = path.join("avatars", avatarName);
+
+  const resizeImage = async () => {
+    try {
+      const image = await Jimp.read(resultUpload);
+      await image.resize(250, 250).write(resultUpload);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  resizeImage();
+  await updateUser(_id, { avatarURL });
+  res.json({ avatarURL });
 };
