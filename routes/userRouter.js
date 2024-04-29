@@ -6,7 +6,9 @@ import {
   currentUser,
   login,
   logout,
+  sendEmailVerify,
   updateAvatar,
+  verifyEmail,
 } from "../controllers/usersControllers.js";
 import { protect } from "../midelwares/authMiddlewares.js";
 import { uploadAvatar } from "../midelwares/upload.js";
@@ -22,5 +24,9 @@ usersRouter.post("/logout", protect, logout);
 usersRouter.get("/current", protect, currentUser);
 
 usersRouter.patch("/avatars", protect, uploadAvatar, updateAvatar);
+
+usersRouter.get("/verify/:verificationToken", verifyEmail);
+
+usersRouter.post("/verify", sendEmailVerify);
 
 export default usersRouter;
